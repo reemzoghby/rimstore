@@ -4,7 +4,7 @@ const app = express()
 
 // Endpoint to Home Page
 app.get('/', function (req, res) {
-  res.send('Hello World')
+  res.send('Hello World 2')
 })
 
 
