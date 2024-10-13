@@ -22,6 +22,12 @@ const rimStoreProducts = {
       "price": "19.99",
       "description": "Best Shampoo ever"
     }
+    {
+      "id": 3,
+      "productName": "Lipstick 2",
+      "price": "18.99",
+      "description": "Best lipstick ever 2"
+    },
   ]
 }
 
