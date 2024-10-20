@@ -1,4 +1,17 @@
 const express = require('express');
+const {Sequelize} = require('@sequelize/core');
+const {MySqlDialect} = require('@sequelize/mysql');
+
+
+const sequelize = new Sequelize({
+  dialect: MySqlDialect,
+  database: 'RimStore',
+  user: 'test_user',
+  password: 'test_password',
+  host: 'localhost',
+  port: 3306,
+}); 
+sequelize.authenticate()
 const app = express();
 
 app.use(express.json());
@@ -8,7 +21,7 @@ const rimStoreProducts = [
     id: 1,
     productName: "Lipstick",
     price: "9.99",
-    description: "Best lipstick ever"
+    description: " lipstick "
   },
   {
     id: 2,
