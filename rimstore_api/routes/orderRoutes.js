@@ -9,8 +9,7 @@ router.post("/", authenticateToken, async (req, res) => {
     let totalAmount = 0;
     for (const item of req.body.items) {
       const product = await Product.findByPk(item.product_id);
-      if (!product)
-        return res.status(404).send(`Product ID ${item.product_id} not found`);
+      if (!product) return res.status(404).send(`Product ID ${item.product_id} not found`);
       totalAmount += product.price * item.quantity;
     }
 
