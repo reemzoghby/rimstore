@@ -1,0 +1,24 @@
+.product-details-page {
+    text-align: center;
+    padding: 20px;
+  }
+  
+  .product-image {
+    width: 100%;
+    max-width: 500px;
+    margin-bottom: 20px;
+  }
+  
+  .add-to-cart-btn {
+    background: #e91e63;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 5px;
+  }
+  
+  .add-to-cart-btn:hover {
+    background: #c2185b;
+  }
+  
