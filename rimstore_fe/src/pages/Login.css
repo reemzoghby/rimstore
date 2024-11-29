@@ -1,0 +1,26 @@
+.login-page {
+    text-align: center;
+    padding: 20px;
+  }
+  
+  .login-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    max-width: 400px;
+    margin: 0 auto;
+  }
+  
+  .login-btn {
+    background: pink;
+    border: none;
+    padding: 10px;
+    color: white;
+    cursor: pointer;
+    border-radius: 5px;
+  }
+  
+  .login-btn:hover {
+    background: #e91e63;
+  }
+  

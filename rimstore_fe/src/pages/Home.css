@@ -1,0 +1,29 @@
+.home-page {
+    text-align: center;
+    padding: 50px;
+  }
+  
+  .home-page h1 {
+    font-size: 3rem;
+    color: #e91e63;
+  }
+  
+  .home-page p {
+    font-size: 1.5rem;
+    color: #333;
+  }
+  
+  .btn {
+    background: pink;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    text-decoration: none;
+    font-size: 1rem;
+  }
+  
+  .btn:hover {
+    background: #e91e63;
+  }
+  
