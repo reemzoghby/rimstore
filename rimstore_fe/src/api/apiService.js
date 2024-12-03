@@ -45,11 +45,6 @@ const apiService = {
   getProducts: () => api.get('/products'),
   getProductDetails: (productId) => api.get(`/products/${productId}`),
 
-  // Cart
-  getCart: () => api.get('/cart'),
-  addToCart: (data) => api.post('/cart', data),
-  removeFromCart: (cartItemId) => api.delete(`/cart/${cartItemId}`),
-
   // Orders
   createOrder: (data) => api.post('/orders', data),
   getOrders: () => api.get('/orders'),

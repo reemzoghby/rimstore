@@ -12,14 +12,18 @@ const Login = () => {
     e.preventDefault();
     try {
       const response = await apiService.login({ email, password });
+
+      // Save token and user info
       localStorage.setItem('token', response.data.token);
-      alert('Login successful!');
+     
+      console.log('login successful')
       navigate('/products');
     } catch (error) {
       console.error('Login error:', error);
-      alert('Invalid credentials!');
+      alert(error.response?.data?.message || 'Invalid credentials!');
     }
   };
+ 
 
   return (
     <div className="login-page">

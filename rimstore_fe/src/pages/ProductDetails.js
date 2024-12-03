@@ -21,12 +21,15 @@ const ProductDetails = () => {
   }, [product_id]);
 
   const handleAddToCart = async () => {
-    try {
-      await apiService.addToCart({ product_id, quantity: 1 });
-      alert('Product added to cart!');
-    } catch (error) {
-      console.error('Error adding to cart:', error);
+    console.log('added item to cart !');
+    const itemToAddToCart = {
+      productName: product.product_name,
+      productPrice: product.price,
+      productDescription: product.description,
+      productImage: product.image_url,
+      quantity: 1
     }
+    localStorage.setItem('cart',itemToAddToCart)
   };
 
   if (!product) return <p>Loading...</p>;

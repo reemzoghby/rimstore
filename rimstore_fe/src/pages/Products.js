@@ -34,18 +34,24 @@ const Products = () => {
   }, []);
 
   const handleAddToCart = async (product) => {
-    if (!user) {
-      setMessage('Please log in to add items to your cart.');
-      return;
-    }
+   
+    console.log('added item to cart !');
+    const itemToAddToCart = [{
+      productId:product.id ,
+      productName: product.product_name,
+      productPrice: product.price,
+      productDescription: product.description,
+      productImage: product.image_url,
+      quantity: 1
+    }]
+    const stringifiedItem = JSON.stringify(itemToAddToCart)
+    const cartItems = localStorage.getItem('cart')
+    console.log('cart items', cartItems)
+    const cartItemlist = JSON.parse(cartItems)
+    cartItemlist.push(itemToAddToCart)
+    localStorage.setItem('cart',stringifiedItem)
 
-    try {
-      await apiService.addToCart({ productId: product.product_id });
-      setMessage(`Added ${product.product_name} to your cart.`);
-    } catch (error) {
-      console.error('Error adding to cart:', error.response || error.message);
-      setMessage('Failed to add item to cart. Please try again.');
-    }
+
   };
 
   const handleAdminAction = (action, productId) => {
