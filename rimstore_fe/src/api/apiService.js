@@ -38,8 +38,8 @@ api.interceptors.response.use(
 
 const apiService = {
   // Authentication
-  login: (data) => api.post('/login', data),
-  signup: (data) => api.post('/signup', data),
+  login: (data) => api.post('/users/login', data),
+  signup: (data) => api.post('/users/signup', data),
 
   // Products
   getProducts: () => api.get('/products'),
