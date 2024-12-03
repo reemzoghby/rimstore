@@ -1,41 +1,62 @@
 .products-page {
-    padding: 20px;
-    text-align: center;
-  }
-  
-  .product-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 20px;
-  }
-  
-  .product-card {
-    border: 1px solid #ddd;
-    border-radius: 10px;
-    text-align: center;
-    padding: 10px;
-    transition: transform 0.3s, box-shadow 0.3s;
-  }
-  
-  .product-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-  }
-  
-  .product-card img {
-    width: 100%;
-    height: 300px;
-    object-fit: cover;
-    margin-bottom: 10px;
-  }
-  
-  .product-card h2 {
-    font-size: 1.5rem;
-    color: #333;
-  }
-  
-  .product-card p {
-    font-size: 1rem;
-    color: #666;
-  }
-  
+  padding: 20px;
+  text-align: center;
+}
+
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 20px;
+  align-items: stretch; /* Ensures all cards have equal height */
+}
+
+.product-card {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  text-align: center;
+  padding: 10px;
+  transition: transform 0.3s, box-shadow 0.3s;
+  background-color: #fff; /* Optional: Adds a background color */
+}
+
+.product-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.product-image {
+  width: 100%;
+  height: auto; /* Allows image to maintain its aspect ratio */
+  object-fit: cover;
+  margin-bottom: 10px;
+  border-radius: 10px 10px 0 0; /* Rounds the top corners of the image */
+}
+
+.product-card h2 {
+  font-size: 1.5rem;
+  color: #333;
+  margin: 10px 0;
+}
+
+.product-card p {
+  font-size: 1rem;
+  color: #666;
+  margin-bottom: 10px;
+}
+
+.add-to-cart-button {
+  background-color: #ff69b4; /* Pink background */
+  color: white; /* White text */
+  border: none;
+  border-radius: 5px;
+  padding: 10px 15px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.add-to-cart-button:hover {
+  background-color: #ff1493; /* Darker pink on hover */
+}

@@ -1,29 +1,104 @@
-.home-page {
-    text-align: center;
-    padding: 50px;
+/* General Styles */
+.homepage {
+  font-family: 'Poppins', sans-serif;
+  color: #333;
+}
+
+/* Hero Section */
+.hero-section {
+  position: relative;
+  width: 100%;
+  height: 70vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.hero-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: brightness(70%);
+}
+
+.hero-overlay {
+  position: absolute;
+  text-align: center;
+  color: white;
+  z-index: 2;
+}
+
+.hero-overlay h1 {
+  font-size: 3rem;
+  margin: 0;
+}
+
+.hero-overlay p {
+  font-size: 1.2rem;
+  margin: 10px 0;
+}
+
+.shop-now-button {
+  background-color: #e91e63;
+  color: white;
+  text-decoration: none;
+  padding: 10px 20px;
+  border-radius: 30px;
+  font-size: 1rem;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.shop-now-button:hover {
+  background-color: #ff4081;
+  transform: scale(1.1);
+}
+
+/* Featured Products */
+.featured-products {
+  text-align: center;
+  padding: 40px 20px;
+  background-color: #f8f9fa;
+}
+
+.featured-products h2 {
+  font-size: 2rem;
+  margin-bottom: 20px;
+}
+
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+  justify-items: center;
+}
+
+.product-card {
+  background-color: white;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  border-radius: 10px;
+  width: 200px;
+  text-align: center;
+  font-size: 1rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .hero-overlay h1 {
+    font-size: 2rem;
   }
-  
-  .home-page h1 {
-    font-size: 3rem;
-    color: #e91e63;
-  }
-  
-  .home-page p {
-    font-size: 1.5rem;
-    color: #333;
-  }
-  
-  .btn {
-    background: pink;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    color: white;
-    text-decoration: none;
+
+  .hero-overlay p {
     font-size: 1rem;
   }
-  
-  .btn:hover {
-    background: #e91e63;
+
+  .shop-now-button {
+    font-size: 0.9rem;
+    padding: 8px 16px;
   }
-  
+
+  .product-card {
+    width: 180px;
+  }
+}
