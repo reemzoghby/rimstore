@@ -34,24 +34,43 @@ const Products = () => {
   }, []);
 
   const handleAddToCart = async (product) => {
-   
-    console.log('added item to cart !');
-    const itemToAddToCart = [{
-      productId:product.id ,
-      productName: product.product_name,
-      productPrice: product.price,
-      productDescription: product.description,
-      productImage: product.image_url,
-      quantity: 1
-    }]
-    const stringifiedItem = JSON.stringify(itemToAddToCart)
-    const cartItems = localStorage.getItem('cart')
-    console.log('cart items', cartItems)
-    const cartItemlist = JSON.parse(cartItems)
-    cartItemlist.push(itemToAddToCart)
-    localStorage.setItem('cart',stringifiedItem)
+    console.log('adding item to cart!!')
 
+    // get current local storage for cart
+    let localStorageForCart = localStorage.getItem('cart')
+    let currentItemsInCart
 
+    // if there is no local storage for cart, create an empty list of items
+    if (localStorageForCart === null) {
+      console.log("CART IS EMPTY")
+      currentItemsInCart = []
+    } else {
+      // otherwise, parse localstorage, and put all current items in the list
+      console.log("CART HAS ITEMS")
+      currentItemsInCart = JSON.parse(localStorageForCart)
+    }
+
+    // Check if product already exists in cart, with same product ID
+    const productInCart = currentItemsInCart.find(p => p.productId === product.product_id)
+    // If product exists in cart => productInCart = {product_id: product_id, ...}
+    // If product does not exist cart => productInCart = undefined
+
+    if (productInCart !== undefined) {
+      // If product is in cart, just increment its quantity
+      productInCart.quantity++
+    } else {
+      const itemToAddToCart = {
+        productId: product.product_id,
+        productName: product.product_name,
+        productPrice: product.price,
+        productDescription: product.description,
+        productImage: product.image_url,
+        quantity: 1
+      }
+      currentItemsInCart.push(itemToAddToCart)
+    }
+    const stringifiedItems = JSON.stringify(currentItemsInCart)
+    localStorage.setItem('cart', stringifiedItems)
   };
 
   const handleAdminAction = (action, productId) => {

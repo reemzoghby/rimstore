@@ -8,22 +8,9 @@ const Cart = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
-    // Check if the user is logged in
-    const token = localStorage.getItem('token');
-    setIsLoggedIn(!!token); // Set isLoggedIn to true if the token exists
-
-    if (token) {
-      const fetchCart = async () => {
-        try {
-          const response = await apiService.getCart();
-          setCart(response.data);
-        } catch (error) {
-          console.error('Error fetching cart:', error);
-        }
-      };
-
-      fetchCart();
-    }
+    // 1. You should load Items in cart from the localStorage
+    // 2. parse items loaded from local storage into a list (JSON.parse)
+    // 3. Assign items to cart variable setCart(cartItems)
   }, []);
 
   const handleRemoveFromCart = async (cartItemId) => {
@@ -42,17 +29,6 @@ const Cart = () => {
   };
 
   const handleAddToCart = async (product) => {
-    if (!isLoggedIn) {
-      alert('Please log in to add items to your cart.');
-      return;
-    }
-
-    try {
-      await apiService.addToCart(product);
-      alert(`${product.product_name} has been added to your cart!`);
-    } catch (error) {
-      console.error('Error adding item to cart:', error);
-    }
   };
 
   return (
@@ -64,8 +40,8 @@ const Cart = () => {
         <div>
           <ul className="cart-items">
             {cart.map((item) => (
-              <li key={item.id} className="cart-item">
-                <p>{item.product_name}</p>
+              <li key={item.productId} className="cart-item">
+                <p>{item.productName}</p>
                 <p>Quantity: {item.quantity}</p>
                 <p>${item.price}</p>
                 <button onClick={() => handleRemoveFromCart(item.id)} className="remove-btn">Remove</button>
