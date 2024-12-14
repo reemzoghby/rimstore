@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom'; // Import Link for navigation
 import apiService from '../api/apiService';
 import './Products.css';
 
@@ -20,7 +21,7 @@ const Products = () => {
 
     const fetchUser = async () => {
       try {
-        const userData = await apiService.getUser(); // Endpoint for fetching user info
+        const userData = await apiService.getUser(); // Fetch user information
         setUser(userData);
         setIsAdmin(userData.role === 'admin'); // Check if user is admin
       } catch {
@@ -33,48 +34,29 @@ const Products = () => {
     fetchUser();
   }, []);
 
-  const handleAddToCart = async (product) => {
-    console.log('adding item to cart!!')
+  const handleAddToCart = (product) => {
+    console.log('Adding item to cart...');
+    const storedCart = localStorage.getItem('cart');
+    const cart = storedCart ? JSON.parse(storedCart) : [];
 
-    // get current local storage for cart
-    let localStorageForCart = localStorage.getItem('cart')
-    let currentItemsInCart
-
-    // if there is no local storage for cart, create an empty list of items
-    if (localStorageForCart === null) {
-      console.log("CART IS EMPTY")
-      currentItemsInCart = []
+    const existingProduct = cart.find((p) => p.productId === product.product_id);
+    if (existingProduct) {
+      existingProduct.quantity++;
     } else {
-      // otherwise, parse localstorage, and put all current items in the list
-      console.log("CART HAS ITEMS")
-      currentItemsInCart = JSON.parse(localStorageForCart)
-    }
-
-    // Check if product already exists in cart, with same product ID
-    const productInCart = currentItemsInCart.find(p => p.productId === product.product_id)
-    // If product exists in cart => productInCart = {product_id: product_id, ...}
-    // If product does not exist cart => productInCart = undefined
-
-    if (productInCart !== undefined) {
-      // If product is in cart, just increment its quantity
-      productInCart.quantity++
-    } else {
-      const itemToAddToCart = {
+      cart.push({
         productId: product.product_id,
         productName: product.product_name,
         productPrice: product.price,
         productDescription: product.description,
         productImage: product.image_url,
-        quantity: 1
-      }
-      currentItemsInCart.push(itemToAddToCart)
+        quantity: 1,
+      });
     }
-    const stringifiedItems = JSON.stringify(currentItemsInCart)
-    localStorage.setItem('cart', stringifiedItems)
+
+    localStorage.setItem('cart', JSON.stringify(cart));
   };
 
   const handleAdminAction = (action, productId) => {
-    // Define admin action handling logic (create, update, delete)
     switch (action) {
       case 'create':
         console.log('Create product logic here');
@@ -115,12 +97,15 @@ const Products = () => {
         {products.length > 0 ? (
           products.map((product) => (
             <div key={product.product_id} className="product-card">
-              <img
-                src={product.image_url || 'https://via.placeholder.com/300'}
-                alt={product.product_name}
-                className="product-image"
-              />
-              <h3>{product.product_name}</h3>
+              <Link to={`/products/${product.product_id}`} className="product-link">
+                {/* Clicking on the image or name navigates to product details */}
+                <img
+                  src={product.image_url || 'https://via.placeholder.com/300'}
+                  alt={product.product_name}
+                  className="product-image"
+                />
+                <h3>{product.product_name}</h3>
+              </Link>
               <p>${product.price}</p>
               <button
                 className="add-to-cart-button"
