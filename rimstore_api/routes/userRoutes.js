@@ -44,17 +44,15 @@ router.post("/signup", async (req, res) => {
  */
 router.post("/login", async (req, res) => {
   try {
-    // Find the user by their email address
     const user = await User.findOne({ where: { email: req.body.email } });
     if (!user) return res.status(404).send("User not found");
 
-    // Compare the provided password with the stored hashed password
     const isValidPassword = await bcrypt.compare(req.body.password, user.password);
     if (!isValidPassword) return res.status(401).send("Invalid password");
 
-    // Generate a JWT token for the authenticated user
     const token = generateToken(user);
-    res.json({ token });
+    // Include is_admin in the response:
+    res.json({ token, is_admin: user.is_admin });
   } catch (error) {
     console.error("Login Error:", error);
     res.status(500).send("Error logging in");

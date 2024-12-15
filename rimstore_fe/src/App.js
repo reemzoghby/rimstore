@@ -8,6 +8,7 @@ import ProductDetails from './pages/ProductDetails';
 import Cart from './pages/Cart';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
+import AdminPanel from './pages/AdminPanel'; // ensure this import is correct
 import './styles.css';
 
 const App = () => {
@@ -22,6 +23,8 @@ const App = () => {
           <Route path="/cart" element={<Cart />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
+          {/* Add the Admin route here */}
+          <Route path="/admin" element={<AdminPanel />} />
         </Routes>
       </main>
       <Footer />

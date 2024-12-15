@@ -8,21 +8,23 @@ const Login = () => {
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const response = await apiService.login({ email, password });
+ // Login.js
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  try {
+    const response = await apiService.login({ email, password });
 
-      // Save token and user info
-      localStorage.setItem('token', response.data.token);
-     
-      console.log('login successful')
-      navigate('/products');
-    } catch (error) {
-      console.error('Login error:', error);
-      alert(error.response?.data?.message || 'Invalid credentials!');
-    }
-  };
+    // Store both token and is_admin in local storage
+    localStorage.setItem('token', response.data.token);
+    localStorage.setItem('is_admin', response.data.is_admin);
+
+    // Navigate to products after login
+    navigate('/products');
+  } catch (error) {
+    console.error('Login error:', error);
+    alert(error.response?.data?.message || 'Invalid credentials!');
+  }
+};
  
 
   return (
