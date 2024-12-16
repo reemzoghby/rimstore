@@ -9,12 +9,14 @@ import Cart from './pages/Cart';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 import AdminPanel from './pages/AdminPanel'; // ensure this import is correct
+
 import './styles.css';
 
 const App = () => {
   return (
     <div className="app">
       <Navbar />
+     
       <main>
         <Routes>
           <Route path="/" element={<Home />} />

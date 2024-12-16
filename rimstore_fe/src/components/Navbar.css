@@ -1,27 +1,81 @@
 .navbar {
-    background: linear-gradient(to right, pink, gold);
-    padding: 15px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+  background: linear-gradient(to right, #f8d5e1, #ffe6f0); /* Soft mauve to pink gradient */
+  padding: 15px 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: 12px; /* Rounded corners */
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1); /* Soft shadow */
+  margin-bottom: 20px;
+}
+
+.brand-logo {
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: #d45d79; /* Deep pink */
+  text-decoration: none;
+  font-family: 'Poppins', sans-serif;
+  letter-spacing: 1px; /* Slight spacing for elegance */
+  transition: color 0.3s ease;
+}
+
+.brand-logo:hover {
+  color: #c34a67; /* Darker pink on hover */
+}
+
+.navbar-links {
+  display: flex;
+  gap: 15px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.navbar-links a,
+.logout-btn {
+  text-decoration: none;
+  color: #ffffff; /* White text */
+  font-size: 1rem;
+  font-weight: 500;
+  background: #d45d79; /* Deep pink */
+  border: none; /* Removed border for a cleaner look */
+  padding: 10px 20px;
+  border-radius: 25px; /* Soft pill-shaped buttons */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Button shadow */
+  transition: all 0.3s ease-in-out;
+}
+
+.navbar-links a:hover,
+.logout-btn:hover {
+  background: #c34a67; /* Slightly darker pink on hover */
+  color: #ffe6f0; /* Light pink text on hover */
+  transform: translateY(-3px); /* Lift effect */
+  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2); /* Stronger shadow on hover */
+}
+
+.logout-btn {
+  background: #eaa9bd; /* Mauve button for logout */
+  font-size: 1rem;
+  padding: 10px 15px;
+  color: #fff;
+  font-weight: bold;
+}
+
+.logout-btn:hover {
+  background: #d492a6; /* Darker mauve on hover */
+  color: #fff;
+  transform: scale(1.05); /* Slight scaling effect */
+}
+
+@media (max-width: 768px) {
+  .navbar {
+    flex-direction: column;
+    text-align: center;
   }
-  
+
   .navbar-links {
-    display: flex;
-    gap: 15px;
-    list-style: none;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 10px;
   }
-  
-  .navbar-links a, .logout-btn {
-    text-decoration: none;
-    color: white;
-    font-size: 1rem;
-    background: none;
-    border: none;
-    cursor: pointer;
-  }
-  
-  .navbar-links a:hover, .logout-btn:hover {
-    color: #333;
-  }
-  
+}

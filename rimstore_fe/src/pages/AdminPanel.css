@@ -1,80 +1,219 @@
+/* General Container */
 .admin-panel-container {
     padding: 20px;
-    max-width: 800px;
+    max-width: 1000px;
     margin: 0 auto;
-    font-family: Arial, sans-serif;
-  }
-  
-  .admin-panel-title {
+    font-family: 'Poppins', sans-serif;
+    background-color: #fff5f8; /* Light pink background */
+    border: 2px solid #f8d5e1; /* Soft mauve border */
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.admin-panel-title {
     text-align: center;
+    font-size: 24px;
+    color: #d45d79; /* Deep pink */
     margin-bottom: 20px;
-  }
-  
-  .admin-add-btn {
-    background: #4caf50;
+    font-weight: bold;
+}
+
+/* Buttons Styling */
+.admin-add-btn, .admin-refresh-btn, .admin-submit-btn, .admin-cancel-btn {
     border: none;
     color: #fff;
-    padding: 10px;
+    padding: 10px 15px;
     margin-bottom: 20px;
     cursor: pointer;
-  }
-  .admin-add-btn:hover {
-    background: #45a049;
-  }
-  
-  .admin-form {
-    background: #f9f9f9;
-    border: 1px solid #ddd;
-    padding: 15px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+.admin-add-btn, .admin-refresh-btn {
+    background: #eaa9bd; /* Mauve */
+}
+
+.admin-add-btn:hover, .admin-refresh-btn:hover {
+    background: #d492a6; /* Darker mauve */
+    transform: scale(1.05);
+}
+
+.admin-submit-btn {
+    background: #f6b5c4; /* Pink */
+}
+
+.admin-submit-btn:hover {
+    background: #e39bad; /* Darker pink */
+}
+
+.admin-cancel-btn {
+    background: #f292a6; /* Deep pink */
+}
+
+.admin-cancel-btn:hover {
+    background: #d36a7f; /* Darker deep pink */
+}
+
+/* Form Styling */
+.admin-form {
+    background: #fff;
+    border: 1px solid #f8d5e1;
+    padding: 20px;
     margin-bottom: 20px;
-  }
-  
-  .admin-input, .admin-textarea {
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.admin-input, .admin-textarea {
     display: block;
     width: 100%;
-    margin-bottom: 10px;
-    padding: 8px;
-  }
-  
-  .admin-submit-btn {
-    background: #2196f3;
-    color: #fff;
-    border: none;
+    margin-bottom: 15px;
     padding: 10px;
-    margin-right: 10px;
-    cursor: pointer;
-  }
-  
-  .admin-cancel-btn {
-    background: #f44336;
-    color: #fff;
-    border: none;
-    padding: 10px;
-    cursor: pointer;
-  }
-  
-  .admin-product-list {
-    list-style-type: none;
+    border-radius: 5px;
+    border: 1px solid #f8d5e1; /* Mauve border */
+    background-color: #ffeef3; /* Very light pink */
+    font-size: 14px;
+    color: #555;
+}
+
+/* Product and Order List Grid Layout */
+.admin-product-list, .admin-order-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Responsive grid */
+    gap: 20px;
     padding: 0;
-  }
-  
-  .admin-product-item {
-    border-bottom: 1px solid #ddd;
-    padding: 10px 0;
-  }
-  
-  .admin-edit-btn {
-    margin-right: 10px;
-    background: #ffc107;
+    list-style: none;
+    margin-top: 20px;
+}
+
+.admin-product-item, .admin-order-item {
+    border: 1px solid #f8d5e1; /* Mauve border */
+    padding: 15px;
+    border-radius: 10px;
+    background: #fff8fa; /* Light pink background */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease-in-out;
+}
+
+.admin-product-item:hover, .admin-order-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Product Image Styling */
+.admin-product-item img {
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
+    margin-bottom: 10px;
+}
+
+.admin-product-item strong, .admin-order-item strong {
+    font-size: 16px;
+    color: #d45d79; /* Deep pink */
+    margin-bottom: 8px;
+}
+
+/* Order Item List */
+.admin-order-content {
+    text-align: left;
+    font-size: 14px;
+    color: #333;
+    line-height: 1.5;
+}
+
+.admin-order-content strong {
+    color: #d45d79; /* Deep pink for labels */
+    font-weight: bold;
+    display: block;
+    margin-bottom: 5px;
+}
+
+/* Order Items Section */
+.admin-order-items {
+    list-style: none;
+    padding: 0;
+    margin: 10px 0;
+    background-color: #ffeef3; /* Soft pink */
+    border-radius: 8px;
+    padding: 12px;
+}
+
+.admin-order-items li {
+    border-bottom: 1px solid #f5c6d2; /* Light mauve border */
+    padding: 8px 0;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.admin-order-items li:last-child {
+    border-bottom: none; /* Remove border for last item */
+}
+
+.admin-order-items strong {
+    color: #d45d79; /* Deep pink for labels */
+    font-size: 14px;
+}
+
+.admin-order-items .item-quantity,
+.admin-order-items .item-price {
+    font-size: 13px;
+    color: #555; /* Subdued gray */
+    margin-top: 2px;
+}
+
+.admin-order-items .item-total-price {
+    font-weight: bold;
+    color: #bf5b8c; /* Mauve for totals */
+    font-size: 14px;
+    margin-top: 5px;
+}
+
+/* Action Buttons */
+.admin-edit-btn, .admin-delete-btn {
+    background: #eaa9bd; /* Mauve */
     border: none;
-    padding: 5px 10px;
+    padding: 8px 12px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: bold;
     cursor: pointer;
-  }
-  
-  .admin-delete-btn {
-    background: #f44336;
-    border: none;
-    padding: 5px 10px;
-    cursor: pointer;
-  }
-  
+    color: #fff;
+    transition: all 0.3s ease;
+}
+
+.admin-edit-btn:hover {
+    background: #d492a6; /* Darker mauve */
+}
+
+.admin-delete-btn:hover {
+    background: #d36a7f; /* Darker deep pink */
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .admin-product-list, .admin-order-list {
+        grid-template-columns: 1fr; /* Stack items vertically */
+    }
+
+    .admin-order-items li {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+
+/* Error Styling */
+.error {
+    color: #d36a7f; /* Dark pink for errors */
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+.admin-refresh-btn {
+    display: block;
+    margin: 0 auto;
+}

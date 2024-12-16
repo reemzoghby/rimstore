@@ -4,6 +4,7 @@ import axios from 'axios';
 import './AdminPanel.css';
 
 const AdminPanel = () => {
+  // Existing state variables for products
   const [products, setProducts] = useState([]);
   const [showAddForm, setShowAddForm] = useState(false);
   const [showEditForm, setShowEditForm] = useState(false);
@@ -25,13 +26,22 @@ const AdminPanel = () => {
     image_url: ''
   });
 
+  
+  // New state variables for orders
+  const [orders, setOrders] = useState([]);
+  const [loadingOrders, setLoadingOrders] = useState(false);
+  const [errorOrders, setErrorOrders] = useState(null);
+
+  // Retrieve the JWT token from localStorage
   const token = localStorage.getItem('token');
-  const BASE_URL = 'http://localhost:3001'; // base URL for your backend
+  const BASE_URL = 'http://localhost:3001'; // Update this if your backend runs on a different URL or port
 
   useEffect(() => {
     fetchProducts();
+    fetchOrders(); // Fetch orders when component mounts
   }, []);
 
+  // Existing fetchProducts function
   const fetchProducts = () => {
     axios.get(`${BASE_URL}/products`)
       .then(response => {
@@ -40,6 +50,62 @@ const AdminPanel = () => {
       })
       .catch(error => console.error('Error fetching products:', error));
   };
+
+  // Finalized fetchOrders function
+  const fetchOrders = () => {
+    setLoadingOrders(true);
+    setErrorOrders(null);
+
+    // Ensure the token exists before making the request
+    if (!token) {
+      console.error('No authentication token found.');
+      setErrorOrders('Authentication token is missing. Please log in again.');
+      setLoadingOrders(false);
+      return;
+    }
+
+    axios
+      .get(`${BASE_URL}/admin/orders`, {
+        headers: {
+          Authorization: `${token}`, // Include the 'Bearer ' prefix
+          'Content-Type': 'application/json', // Optional: Specify content type
+        },
+      })
+      .then((response) => {
+        console.log('Fetched orders:', response.data);
+        setOrders(response.data);
+        setLoadingOrders(false);
+      })
+      .catch((error) => {
+        // Enhanced error handling
+        if (error.response) {
+          // Server responded with a status other than 2xx
+          console.error(
+            'Error fetching orders:',
+            error.response.status,
+            error.response.data
+          );
+          if (error.response.status === 401) {
+            setErrorOrders('Unauthorized. Please log in.');
+          } else if (error.response.status === 403) {
+            setErrorOrders('Forbidden. Admin privileges required.');
+          } else {
+            setErrorOrders(`Error: ${error.response.data}`);
+          }
+        } else if (error.request) {
+          // Request was made but no response received
+          console.error('Error fetching orders: No response received', error.request);
+          setErrorOrders('No response from server. Please try again later.');
+        } else {
+          // Something else happened while setting up the request
+          console.error('Error fetching orders:', error.message);
+          setErrorOrders(`Error: ${error.message}`);
+        }
+        setLoadingOrders(false);
+      });
+  };
+
+  // Existing handleAddProduct function
   const handleAddProduct = async (e) => {
     e.preventDefault();
   
@@ -58,9 +124,9 @@ const AdminPanel = () => {
     console.log('Sending product data:', newProductData); // Log data being sent
   
     try {
-      const response = await axios.post(`http://localhost:3001/products`, newProductData, {
+      const response = await axios.post(`${BASE_URL}/products`, newProductData, {
         headers: {
-          Authorization: `${token}`,
+          Authorization: `Bearer ${token}`, // Added 'Bearer ' prefix
           'Content-Type': 'application/json',
         },
       });
@@ -90,11 +156,11 @@ const AdminPanel = () => {
     }
   };
   
-
+  // Existing handleDeleteProduct function
   const handleDeleteProduct = (productId) => {
     axios.delete(`${BASE_URL}/products/${productId}`, {
       headers: {
-        Authorization: token
+        Authorization: `Bearer ${token}` // Added 'Bearer ' prefix
       }
     })
     .then(() => {
@@ -104,6 +170,7 @@ const AdminPanel = () => {
     .catch(error => console.error('Error deleting product:', error));
   };
 
+  // Existing handleShowEditForm function
   const handleShowEditForm = (product) => {
     setShowEditForm(true);
     setEditProductId(product.product_id);
@@ -116,11 +183,12 @@ const AdminPanel = () => {
     });
   };
 
+  // Existing handleEditProduct function
   const handleEditProduct = (e) => {
     e.preventDefault();
     axios.put(`${BASE_URL}/products/${editProductId}`, editProductData, {
       headers: {
-        Authorization: token
+        Authorization: `Bearer ${token}` // Added 'Bearer ' prefix
       }
     })
     .then(response => {
@@ -142,11 +210,13 @@ const AdminPanel = () => {
   return (
     <div className="admin-panel-container">
       <h1 className="admin-panel-title">Admin Panel</h1>
-      <p>Manage products here.</p>
+      <p>Manage products and view orders here.</p>
 
+      {/* Products Management Section */}
       <h2>Products</h2>
       <button className="admin-add-btn" onClick={() => setShowAddForm(true)}>Add New Product</button>
       
+      {/* Add Product Form */}
       {showAddForm && (
         <form className="admin-form" onSubmit={handleAddProduct}>
           <h3>Add New Product</h3>
@@ -192,6 +262,7 @@ const AdminPanel = () => {
         </form>
       )}
 
+      {/* Edit Product Form */}
       {showEditForm && (
         <form className="admin-form" onSubmit={handleEditProduct}>
           <h3>Edit Product</h3>
@@ -237,28 +308,71 @@ const AdminPanel = () => {
         </form>
       )}
 
+      {/* Products List */}
       <ul className="admin-product-list">
         {products.length > 0 ? (
           products.map(product => (
             <li className="admin-product-item" key={product.product_id}>
-            <strong>{product.product_name}</strong> - ${product.price}<br />
-            {/* Add the image element here */}
-            {product.image_url && (
-              <img 
-                src={product.image_url} 
-                alt={product.product_name} 
-                style={{ width: '100px', height: 'auto', marginTop: '10px' }}
-              />
-            )}
-            <br />
-            <button className="admin-edit-btn" onClick={() => handleShowEditForm(product)}>Edit</button>
-            <button className="admin-delete-btn" onClick={() => handleDeleteProduct(product.product_id)}>Delete</button>
-          </li>
+              <strong>{product.product_name}</strong> - ${product.price}<br />
+              {product.image_url && (
+                <img 
+                  src={product.image_url} 
+                  alt={product.product_name} 
+                  style={{ width: '100px', height: 'auto', marginTop: '10px' }}
+                />
+              )}
+              <br />
+              <button className="admin-edit-btn" onClick={() => handleShowEditForm(product)}>Edit</button>
+              <button className="admin-delete-btn" onClick={() => handleDeleteProduct(product.product_id)}>Delete</button>
+            </li>
           ))
         ) : (
           <p>No products available.</p>
         )}
       </ul>
+
+    {/* Orders Management Section */}
+<h2>Orders</h2>
+<button className="admin-refresh-btn" onClick={fetchOrders}>Refresh Orders</button>
+
+{loadingOrders && <p>Loading orders...</p>}
+{errorOrders && <p className="error">{errorOrders}</p>}
+
+<ul className="admin-order-list">
+  {orders.length > 0 ? (
+    orders.map(order => {
+      console.log("Order Data:", order); // Debugging
+      return (
+        <li className="admin-order-item" key={order.order_id}>
+          <strong>Order ID: {order.order_id}</strong> <br />
+          <strong>User: {order.user?.first_name || "Unknown"} {order.user?.last_name || "Unknown"} </strong>  <br />
+          <strong>Total Amount: ${typeof order.total_amount === 'number' && !isNaN(order.total_amount) ? order.total_amount.toFixed(2) : "0.00"} </strong>  <br />
+          <strong>Status: {order.order_status || "Unknown"} </strong><br />
+          <strong>Items:</strong>
+          <ul>
+            {order.order_items.map(item => {
+              console.log("Order Item Data:", item); // Debugging
+              return (
+                <li key={item.order_item_id}>
+                  <strong>Product:{item.product_name || "Unknown Product"} </strong>  <br/>
+                
+                  <strong>Quantity: {item.quantity || "N/A"} </strong> <br />
+                  <strong>Total Price: ${typeof item.product_price === 'number' && !isNaN(item.product_price) ? (item.quantity * item.product_price).toFixed(2) : "0.00"}</strong>
+                </li>
+              );
+            })}
+          </ul>
+          <strong>Created At: {order.created_at ? new Date(order.created_at).toLocaleString() : "Unknown"}</strong> 
+         
+        </li>
+      );
+    })
+  ) : (
+    !loadingOrders && <p>No orders available.</p>
+  )}
+</ul>
+
+
     </div>
   );
 };
