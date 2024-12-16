@@ -5,7 +5,7 @@ const { Product } = require("../models");
 // Import middleware for authentication and admin authorization
 const authenticateToken = require("../middleware/authenticateUser");
 const requireAdmin = require("../middleware/adminCheck");
-
+const { Op } = require("@sequelize/core");
 // Create an Express router instance
 const router = express.Router();
 
@@ -16,10 +16,26 @@ const router = express.Router();
  */
 router.get("/", async (req, res) => {
   try {
-    // Fetch all products from the database
-    const products = await Product.findAll();
+    const { search } = req.query; // Extract search query parameter
+    let products;
+
+    if (search) {
+      // If search query is present, filter products
+      products = await Product.findAll({
+        where: {
+          product_name: {
+            [Op.like]: `%${search}%`, // Partial match
+          },
+        },
+      });
+    } else {
+      // If no search query, return all products
+      products = await Product.findAll();
+    }
+
     res.json(products);
   } catch (error) {
+    console.error("Error fetching products:", error);
     res.status(500).send("Error fetching products");
   }
 });

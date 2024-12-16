@@ -1,6 +1,8 @@
-import React, { useState, useEffect } from 'react';
+// src/pages/Products.js
+import React, { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom'; // Import Link for navigation
 import apiService from '../api/apiService';
+import SearchBar from '../components/SearchBar'; // Import SearchBar
 import './Products.css';
 
 const Products = () => {
@@ -8,17 +10,25 @@ const Products = () => {
   const [user, setUser] = useState(null); // Holds user information
   const [isAdmin, setIsAdmin] = useState(false); // Check if the user is admin
   const [message, setMessage] = useState(''); // Message for login prompts
+  const [loading, setLoading] = useState(false); // Loading state for products
+  const [error, setError] = useState(null); // Error state for products
+
+  // Define fetchProducts using useCallback to memoize the function
+  const fetchProducts = useCallback(async (searchQuery = '') => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await apiService.getProducts(searchQuery); // Pass searchQuery
+      setProducts(response.data);
+    } catch (error) {
+      console.error('Error fetching products:', error.response || error.message);
+      setError('Failed to fetch products.');
+    } finally {
+      setLoading(false);
+    }
+  }, []);
 
   useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const response = await apiService.getProducts();
-        setProducts(response.data);
-      } catch (error) {
-        console.error('Error fetching products:', error.response || error.message);
-      }
-    };
-
     const fetchUser = async () => {
       try {
         const userData = await apiService.getUser(); // Fetch user information
@@ -30,9 +40,9 @@ const Products = () => {
       }
     };
 
-    fetchProducts();
+    fetchProducts(); // Fetch all products on mount
     fetchUser();
-  }, []);
+  }, [fetchProducts]);
 
   const handleAddToCart = (product) => {
     console.log('Adding item to cart...');
@@ -72,9 +82,25 @@ const Products = () => {
     }
   };
 
+  // Handle search from SearchBar component
+  const handleSearch = (query) => {
+    fetchProducts(query);
+  };
+
   return (
     <div className="products-page">
-      <h1>Makeup Collection</h1>
+      <h1 className="collection-heading">Makeup Collection</h1>
+      {/* Alternatively, with decorative icons:
+      <h1 className="collection-heading">
+        <FlowerIcon className="flower-icon" />
+        Makeup Collection
+        <FlowerIcon className="flower-icon" />
+      </h1>
+      */}
+
+      {/* Integrate the SearchBar component */}
+      <SearchBar onSearch={handleSearch} />
+
       {isAdmin && (
         <div className="admin-panel">
           <h2>Admin Panel</h2>
@@ -93,6 +119,11 @@ const Products = () => {
         </div>
       )}
       {message && <p className="message">{message}</p>}
+      
+      {/* Display loading or error messages */}
+      {loading && <p>Loading products...</p>}
+      {error && <p className="error">{error}</p>}
+      
       <div className="product-grid">
         {products.length > 0 ? (
           products.map((product) => (
@@ -116,7 +147,7 @@ const Products = () => {
             </div>
           ))
         ) : (
-          <p>Loading products...</p>
+          !loading && <p>No products found.</p>
         )}
       </div>
     </div>

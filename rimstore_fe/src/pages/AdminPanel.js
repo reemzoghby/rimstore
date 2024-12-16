@@ -41,17 +41,20 @@ const AdminPanel = () => {
     fetchOrders(); // Fetch orders when component mounts
   }, []);
 
-  // Existing fetchProducts function
+  // Fetch Products
   const fetchProducts = () => {
     axios.get(`${BASE_URL}/products`)
       .then(response => {
         console.log('Fetched products:', response.data);
         setProducts(response.data);
       })
-      .catch(error => console.error('Error fetching products:', error));
+      .catch(error => {
+        console.error('Error fetching products:', error);
+        alert('Failed to fetch products. Please try again later.');
+      });
   };
 
-  // Finalized fetchOrders function
+  // Fetch Orders
   const fetchOrders = () => {
     setLoadingOrders(true);
     setErrorOrders(null);
@@ -67,7 +70,7 @@ const AdminPanel = () => {
     axios
       .get(`${BASE_URL}/admin/orders`, {
         headers: {
-          Authorization: `${token}`, // Include the 'Bearer ' prefix
+          Authorization: `${token}`, // Removed 'Bearer ' prefix
           'Content-Type': 'application/json', // Optional: Specify content type
         },
       })
@@ -105,7 +108,7 @@ const AdminPanel = () => {
       });
   };
 
-  // Existing handleAddProduct function
+  // Add Product
   const handleAddProduct = async (e) => {
     e.preventDefault();
   
@@ -126,7 +129,7 @@ const AdminPanel = () => {
     try {
       const response = await axios.post(`${BASE_URL}/products`, newProductData, {
         headers: {
-          Authorization: `Bearer ${token}`, // Added 'Bearer ' prefix
+          Authorization: `${token}`, // Removed 'Bearer ' prefix
           'Content-Type': 'application/json',
         },
       });
@@ -141,6 +144,7 @@ const AdminPanel = () => {
         image_url: ''
       });
       setShowAddForm(false);
+      alert('Product created successfully!');
     } catch (error) {
       console.error('Error creating product:', error);
       if (error.response) {
@@ -156,21 +160,39 @@ const AdminPanel = () => {
     }
   };
   
-  // Existing handleDeleteProduct function
+  // Delete Product
   const handleDeleteProduct = (productId) => {
+    if (!window.confirm('Are you sure you want to delete this product?')) {
+      return;
+    }
+
     axios.delete(`${BASE_URL}/products/${productId}`, {
       headers: {
-        Authorization: `Bearer ${token}` // Added 'Bearer ' prefix
+        Authorization: `${token}` // Removed 'Bearer ' prefix
       }
     })
     .then(() => {
       console.log(`Product ${productId} deleted`);
       setProducts(prev => prev.filter(p => p.product_id !== productId));
+      alert('Product deleted successfully!');
     })
-    .catch(error => console.error('Error deleting product:', error));
+    .catch(error => {
+      console.error('Error deleting product:', error);
+      if (error.response) {
+        if (error.response.status === 403) {
+          alert('Forbidden. You do not have permission to delete this product.');
+        } else {
+          alert(`Error: ${error.response.data}`);
+        }
+      } else if (error.request) {
+        alert('Error: No response from server.');
+      } else {
+        alert(`Error: ${error.message}`);
+      }
+    });
   };
 
-  // Existing handleShowEditForm function
+  // Show Edit Form
   const handleShowEditForm = (product) => {
     setShowEditForm(true);
     setEditProductId(product.product_id);
@@ -183,12 +205,12 @@ const AdminPanel = () => {
     });
   };
 
-  // Existing handleEditProduct function
+  // Edit Product
   const handleEditProduct = (e) => {
     e.preventDefault();
     axios.put(`${BASE_URL}/products/${editProductId}`, editProductData, {
       headers: {
-        Authorization: `Bearer ${token}` // Added 'Bearer ' prefix
+        Authorization: `${token}` // Removed 'Bearer ' prefix
       }
     })
     .then(response => {
@@ -203,8 +225,22 @@ const AdminPanel = () => {
         price: '',
         image_url: ''
       });
+      alert('Product updated successfully!');
     })
-    .catch(error => console.error('Error updating product:', error));
+    .catch(error => {
+      console.error('Error updating product:', error);
+      if (error.response) {
+        if (error.response.status === 403) {
+          alert('Forbidden. You do not have permission to edit this product.');
+        } else {
+          alert(`Error: ${error.response.data}`);
+        }
+      } else if (error.request) {
+        alert('Error: No response from server.');
+      } else {
+        alert(`Error: ${error.message}`);
+      }
+    });
   };
 
   return (
@@ -215,7 +251,7 @@ const AdminPanel = () => {
       {/* Products Management Section */}
       <h2>Products</h2>
       <button className="admin-add-btn" onClick={() => setShowAddForm(true)}>Add New Product</button>
-      
+
       {/* Add Product Form */}
       {showAddForm && (
         <form className="admin-form" onSubmit={handleAddProduct}>
@@ -313,7 +349,7 @@ const AdminPanel = () => {
         {products.length > 0 ? (
           products.map(product => (
             <li className="admin-product-item" key={product.product_id}>
-              <strong>{product.product_name}</strong> - ${product.price}<br />
+              <strong>{product.product_name}</strong> - ${parseFloat(product.price).toFixed(2)}<br />
               {product.image_url && (
                 <img 
                   src={product.image_url} 
@@ -331,48 +367,51 @@ const AdminPanel = () => {
         )}
       </ul>
 
-    {/* Orders Management Section */}
-<h2>Orders</h2>
-<button className="admin-refresh-btn" onClick={fetchOrders}>Refresh Orders</button>
+      {/* Orders Management Section */}
+      <h2>Orders</h2>
+      <button className="admin-refresh-btn" onClick={fetchOrders}>Refresh Orders</button>
 
-{loadingOrders && <p>Loading orders...</p>}
-{errorOrders && <p className="error">{errorOrders}</p>}
+      {loadingOrders && <p>Loading orders...</p>}
+      {errorOrders && <p className="error">{errorOrders}</p>}
 
-<ul className="admin-order-list">
-  {orders.length > 0 ? (
-    orders.map(order => {
-      console.log("Order Data:", order); // Debugging
-      return (
-        <li className="admin-order-item" key={order.order_id}>
-          <strong>Order ID: {order.order_id}</strong> <br />
-          <strong>User: {order.user?.first_name || "Unknown"} {order.user?.last_name || "Unknown"} </strong>  <br />
-          <strong>Total Amount: ${typeof order.total_amount === 'number' && !isNaN(order.total_amount) ? order.total_amount.toFixed(2) : "0.00"} </strong>  <br />
-          <strong>Status: {order.order_status || "Unknown"} </strong><br />
-          <strong>Items:</strong>
-          <ul>
-            {order.order_items.map(item => {
-              console.log("Order Item Data:", item); // Debugging
-              return (
-                <li key={item.order_item_id}>
-                  <strong>Product:{item.product_name || "Unknown Product"} </strong>  <br/>
-                
-                  <strong>Quantity: {item.quantity || "N/A"} </strong> <br />
-                  <strong>Total Price: ${typeof item.product_price === 'number' && !isNaN(item.product_price) ? (item.quantity * item.product_price).toFixed(2) : "0.00"}</strong>
-                </li>
-              );
-            })}
-          </ul>
-          <strong>Created At: {order.created_at ? new Date(order.created_at).toLocaleString() : "Unknown"}</strong> 
-         
-        </li>
-      );
-    })
-  ) : (
-    !loadingOrders && <p>No orders available.</p>
-  )}
-</ul>
-
-
+      <ul className="admin-order-list">
+        {orders.length > 0 ? (
+          orders.map(order => {
+            return (
+              <li className="admin-order-item" key={order.order_id}>
+                <strong>Order ID: {order.order_id}</strong>
+                <div className="admin-order-content">
+                  <strong>User:</strong> {order.user?.first_name || "Unknown"} {order.user?.last_name || "Unknown"} <br />
+                  <strong>Total Amount:</strong> ${typeof order.total_amount === 'number' && !isNaN(order.total_amount) ? parseFloat(order.total_amount).toFixed(2) : "0.00"} <br />
+                  <strong>Status:</strong> {order.order_status || "Unknown"}<br />
+                </div>
+                <strong>Items:</strong>
+                <ul className="admin-order-items">
+                  {order.order_items.map(item => {
+                    return (
+                      <li key={item.order_item_id}>
+                        <strong>Product:</strong> {item.product_name || "Unknown Product"}
+                        <div className="item-details">
+                          <span>Quantity: {item.quantity || "N/A"}</span>
+                          <span>Price: ${typeof item.product_price === 'number' && !isNaN(item.product_price) ? parseFloat(item.product_price).toFixed(2) : "0.00"}</span>
+                        </div>
+                        <span className="item-total-price">
+                          Total Price: ${typeof item.product_price === 'number' && !isNaN(item.product_price) ? (item.quantity * item.product_price).toFixed(2) : "0.00"}
+                        </span>
+                      </li>
+                    );
+                  })}
+                </ul>
+                <strong className="order-created-at">
+                  Created At: {order.created_at ? new Date(order.created_at).toLocaleString() : "Unknown"}
+                </strong>
+              </li>
+            );
+          })
+        ) : (
+          !loadingOrders && <p>No orders available.</p>
+        )}
+      </ul>
     </div>
   );
 };

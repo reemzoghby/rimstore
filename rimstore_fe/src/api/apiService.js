@@ -42,7 +42,14 @@ const apiService = {
   signup: (data) => api.post('/users/signup', data),
 
   // Products
-  getProducts: () => api.get('/products'),
+  getProducts: (searchQuery = '') => {
+    if (searchQuery) {
+      return api.get('/products', {
+        params: { search: searchQuery },
+      });
+    }
+    return api.get('/products');
+  },
   getProductDetails: (productId) => api.get(`/products/${productId}`),
 
   // Orders

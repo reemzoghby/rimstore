@@ -32,20 +32,20 @@ const Cart = () => {
 
     try {
       const storedCart = localStorage.getItem('cart');
-      let cart = storedCart ? JSON.parse(storedCart) : [];
+      let updatedCart = storedCart ? JSON.parse(storedCart) : [];
 
-      const existingItemIndex = cart.findIndex(
+      const existingItemIndex = updatedCart.findIndex(
         (item) => item.productName === itemToAddToCart.productName
       );
 
       if (existingItemIndex > -1) {
-        cart[existingItemIndex].quantity += itemToAddToCart.quantity;
+        updatedCart[existingItemIndex].quantity += itemToAddToCart.quantity;
       } else {
-        cart.push(itemToAddToCart);
+        updatedCart.push(itemToAddToCart);
       }
 
-      localStorage.setItem('cart', JSON.stringify(cart));
-      setCart(cart);
+      localStorage.setItem('cart', JSON.stringify(updatedCart));
+      setCart(updatedCart);
     } catch (error) {
       console.error('Error in handleAddToCart:', error);
     }
@@ -61,8 +61,8 @@ const Cart = () => {
     try {
       const storedCart = localStorage.getItem('cart');
       if (storedCart) {
-        let cart = JSON.parse(storedCart);
-        cart = cart
+        let updatedCart = JSON.parse(storedCart);
+        updatedCart = updatedCart
           .map((item) =>
             item.productName === cartItemId
               ? { ...item, quantity: item.quantity - 1 }
@@ -70,8 +70,8 @@ const Cart = () => {
           )
           .filter((item) => item.quantity > 0);
 
-        localStorage.setItem('cart', JSON.stringify(cart));
-        setCart(cart);
+        localStorage.setItem('cart', JSON.stringify(updatedCart));
+        setCart(updatedCart);
       }
     } catch (error) {
       console.error('Error in handleRemoveFromCart:', error);
@@ -110,6 +110,17 @@ const Cart = () => {
       }
     }
   };
+
+  // Function to handle quantity increment
+  const handleIncrement = (item) => {
+    handleAddToCart({ productName: item.productName, quantity: 1 });
+  };
+
+  // Function to handle quantity decrement
+  const handleDecrement = (item) => {
+    handleRemoveFromCart(item.productName);
+  };
+
   return (
     <div className="cart-page">
       <h1>Your Cart</h1>
@@ -124,9 +135,26 @@ const Cart = () => {
                   <img src={item.productImage} alt={item.productName || 'Product Image'} />
                 )}
                 <div className="cart-item-details">
-                  <p>{item.productName}</p>
-                  <p>{item.productDescription}</p>
-                  <p>Quantity: {item.quantity}</p>
+                  <p className="product-name">{item.productName}</p>
+                  <p className="product-description">{item.productDescription}</p>
+                  <div className="quantity-controls">
+                    <button
+                      onClick={() => handleIncrement(item)}
+                      className="quantity-btn"
+                      aria-label={`Increase quantity of ${item.productName}`}
+                    >
+                      ▲
+                    </button>
+                    <span className="quantity">{item.quantity}</span>
+                    <button
+                      onClick={() => handleDecrement(item)}
+                      className="quantity-btn"
+                      aria-label={`Decrease quantity of ${item.productName}`}
+                      disabled={item.quantity === 1}
+                    >
+                      ▼
+                    </button>
+                  </div>
                 </div>
                 {item.productPrice && (
                   <p className="cart-item-price">
@@ -136,6 +164,7 @@ const Cart = () => {
                 <button
                   onClick={() => handleRemoveFromCart(item.productName)}
                   className="remove-btn"
+                  aria-label={`Remove ${item.productName} from cart`}
                 >
                   Remove
                 </button>

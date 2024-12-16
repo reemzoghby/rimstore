@@ -1,6 +1,46 @@
+/* src/pages/Products.css */
+@import url('https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap');
+
 .products-page {
   padding: 20px;
   text-align: center;
+  background-color: #fff0f5; /* Lavender blush background */
+  min-height: 100vh;
+}
+
+.collection-heading {
+  font-family: 'Great Vibes', cursive;
+  font-size: 3rem;
+  color: #FF69B4; /* Hot pink */
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+  margin-bottom: 20px;
+  position: relative;
+  display: inline-block; /* Allows positioning of pseudo-element */
+}
+
+/* Decorative underline */
+.collection-heading::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -10px;
+  width: 50%;
+  height: 4px;
+  background-color: #FF1493; /* Darker pink */
+  border-radius: 2px;
+}
+
+/* Responsive font size */
+@media (max-width: 768px) {
+  .collection-heading {
+    font-size: 2.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .collection-heading {
+    font-size: 2rem;
+  }
 }
 
 .product-grid {
@@ -18,7 +58,7 @@
   text-align: center;
   padding: 10px;
   transition: transform 0.3s, box-shadow 0.3s;
-  background-color: #fff; /* Optional: Adds a background color */
+  background-color: #fff; /* White background for cards */
 }
 
 .product-card:hover {
@@ -26,15 +66,20 @@
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 
+.product-link {
+  text-decoration: none;
+  color: inherit;
+}
+
 .product-image {
   width: 100%;
-  height: auto; /* Allows image to maintain its aspect ratio */
+  height: auto; /* Maintains aspect ratio */
   object-fit: cover;
   margin-bottom: 10px;
   border-radius: 10px 10px 0 0; /* Rounds the top corners of the image */
 }
 
-.product-card h2 {
+.product-card h3 {
   font-size: 1.5rem;
   color: #333;
   margin: 10px 0;
@@ -47,7 +92,7 @@
 }
 
 .add-to-cart-button {
-  background-color: #ff69b4; /* Pink background */
+  background-color: #FF69B4; /* Pink background */
   color: white; /* White text */
   border: none;
   border-radius: 5px;
@@ -58,5 +103,48 @@
 }
 
 .add-to-cart-button:hover {
-  background-color: #ff1493; /* Darker pink on hover */
+  background-color: #FF1493; /* Darker pink on hover */
+}
+
+/* Admin Panel Styles */
+.admin-panel {
+  margin-bottom: 20px;
+  background-color: #ffe6f0; /* Light pink background */
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.admin-panel h2 {
+  color: #FF69B4; /* Hot pink */
+}
+
+.admin-actions p {
+  font-size: 1rem;
+  color: #333;
+}
+
+.admin-actions button {
+  margin: 5px;
+  padding: 8px 12px;
+  background-color: #FFB6C1; /* Light pink */
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.admin-actions button:hover {
+  background-color: #FF69B4; /* Hot pink on hover */
+}
+
+.message {
+  text-align: center;
+  color: #28a745; /* Green for success messages */
+}
+
+.error {
+  text-align: center;
+  color: #dc3545; /* Red for error messages */
 }
